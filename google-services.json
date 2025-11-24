@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "848121409302",
+    "project_id": "gymvoro",
+    "storage_bucket": "gymvoro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848121409302:android:82cef8cea56ca5ff982a37",
+        "android_client_info": {
+          "package_name": "com.gymvoro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzjVnqQN3GqaWHb1jYLYJovxBIKgHMeQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
