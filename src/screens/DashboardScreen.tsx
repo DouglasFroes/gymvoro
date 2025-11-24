@@ -1,6 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 export const DashboardScreen = () => {
   const navigation = useNavigation();
