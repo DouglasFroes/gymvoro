@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { ScreenContainer } from '../../components/ScreenContainer';
-import { Input } from '../../components/Input';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../../components/Button';
+import { Input } from '../../components/Input';
+import { ScreenContainer } from '../../components/ScreenContainer';
 
 export const LoginScreen = () => {
   const navigation = useNavigation<any>();
@@ -55,17 +55,17 @@ export const LoginScreen = () => {
           onChangeText={setPassword}
           secureTextEntry
         />
-        
-        <Button 
-          title="Sign In" 
-          onPress={handleLogin} 
+
+        <Button
+          title="Sign In"
+          onPress={handleLogin}
           loading={loading}
           style={styles.button}
         />
 
-        <Button 
-          title="Create Account" 
-          onPress={() => navigation.navigate('Register')} 
+        <Button
+          title="Create Account"
+          onPress={() => navigation.navigate('Register')}
           variant="outline"
           style={styles.button}
         />

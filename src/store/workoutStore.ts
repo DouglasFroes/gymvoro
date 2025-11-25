@@ -1,6 +1,6 @@
+import firestore from '@react-native-firebase/firestore';
 import { create } from 'zustand';
 import { WorkoutRoutine } from '../types';
-import firestore from '@react-native-firebase/firestore';
 import { useAuthStore } from './authStore';
 
 interface WorkoutState {
@@ -45,7 +45,7 @@ export const useWorkoutStore = create<WorkoutState>((set) => ({
     // Optimistic update
     const tempId = Math.random().toString(36).substring(7);
     const newWorkout = { id: tempId, ...workoutData } as WorkoutRoutine;
-    
+
     set(state => ({ workouts: [newWorkout, ...state.workouts] }));
 
     try {
@@ -54,7 +54,7 @@ export const useWorkoutStore = create<WorkoutState>((set) => ({
         .doc(user.uid)
         .collection('workouts')
         .add(workoutData);
-        
+
       // Re-fetch to get the real ID and ensure sync
       // In a real app, we might just update the ID of the optimistic item
       useWorkoutStore.getState().fetchWorkouts();

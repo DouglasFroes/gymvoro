@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ScreenContainer } from '../components/ScreenContainer';
+import React, { useEffect } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Button } from '../components/Button';
+import { ScreenContainer } from '../components/ScreenContainer';
 import { useWorkoutStore } from '../store/workoutStore';
 import { WorkoutRoutine } from '../types';
 
@@ -15,7 +15,7 @@ export const WorkoutsScreen = () => {
   }, []);
 
   const renderItem = ({ item }: { item: WorkoutRoutine }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.card}
       onPress={() => navigation.navigate('WorkoutDetails', { workoutId: item.id })}
     >
@@ -23,8 +23,8 @@ export const WorkoutsScreen = () => {
         <Text style={styles.cardTitle}>{item.name}</Text>
         <Text style={styles.cardSubtitle}>{item.exercises.length} Exercises</Text>
       </View>
-      <Button 
-        title="Start" 
+      <Button
+        title="Start"
         onPress={() => navigation.navigate('ActiveWorkout', { workoutId: item.id })}
         style={styles.startBtn}
         textStyle={{ fontSize: 14 }}
@@ -36,9 +36,9 @@ export const WorkoutsScreen = () => {
     <ScreenContainer>
       <View style={styles.header}>
         <Text style={styles.title}>My Workouts</Text>
-        <Button 
-          title="+ New" 
-          onPress={() => navigation.navigate('CreateWorkout')} 
+        <Button
+          title="+ New"
+          onPress={() => navigation.navigate('CreateWorkout')}
           style={styles.newBtn}
         />
       </View>

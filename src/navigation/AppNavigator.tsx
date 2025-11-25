@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import auth from '@react-native-firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import auth from '@react-native-firebase/auth';
-import { DashboardScreen } from '../screens/DashboardScreen';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { LoginScreen } from '../screens/auth/LoginScreen';
 import { RegisterScreen } from '../screens/auth/RegisterScreen';
-import { WorkoutsScreen } from '../screens/WorkoutsScreen';
 import { CreateWorkoutScreen } from '../screens/CreateWorkoutScreen';
+import { DashboardScreen } from '../screens/DashboardScreen';
 import { HistoryScreen } from '../screens/HistoryScreen';
-import { useAuthStore, mapFirebaseUser } from '../store/authStore';
-import { ActivityIndicator, View } from 'react-native';
+import { WorkoutsScreen } from '../screens/WorkoutsScreen';
+import { mapFirebaseUser, useAuthStore } from '../store/authStore';
 
 const Stack = createNativeStackNavigator();
 

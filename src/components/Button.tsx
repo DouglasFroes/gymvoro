@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface ButtonProps {
   title: string;
@@ -11,16 +11,16 @@ interface ButtonProps {
   textStyle?: TextStyle;
 }
 
-export const Button = ({ 
-  title, 
-  onPress, 
-  variant = 'primary', 
-  loading = false, 
+export const Button = ({
+  title,
+  onPress,
+  variant = 'primary',
+  loading = false,
   disabled = false,
   style,
   textStyle
 }: ButtonProps) => {
-  
+
   const getBackgroundColor = () => {
     if (disabled) return '#9CA3AF';
     switch (variant) {

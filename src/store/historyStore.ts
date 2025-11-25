@@ -1,6 +1,6 @@
+import firestore from '@react-native-firebase/firestore';
 import { create } from 'zustand';
 import { WorkoutSession } from '../types';
-import firestore from '@react-native-firebase/firestore';
 import { useAuthStore } from './authStore';
 
 interface HistoryState {

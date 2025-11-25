@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ScreenContainer } from '../components/ScreenContainer';
-import { Input } from '../components/Input';
+import React, { useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../components/Button';
+import { Input } from '../components/Input';
+import { ScreenContainer } from '../components/ScreenContainer';
 import { useWorkoutStore } from '../store/workoutStore';
 
 export const CreateWorkoutScreen = () => {
@@ -37,15 +37,15 @@ export const CreateWorkoutScreen = () => {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Button 
-          title="Cancel" 
-          onPress={() => navigation.goBack()} 
+        <Button
+          title="Cancel"
+          onPress={() => navigation.goBack()}
           variant="outline"
           style={styles.backBtn}
           textStyle={{ fontSize: 14 }}
         />
         <Text style={styles.title}>New Workout</Text>
-        <View style={{ width: 60 }} /> 
+        <View style={{ width: 60 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -65,9 +65,9 @@ export const CreateWorkoutScreen = () => {
           </Text>
         </View>
 
-        <Button 
-          title="Save Workout" 
-          onPress={handleSave} 
+        <Button
+          title="Save Workout"
+          onPress={handleSave}
           loading={loading}
           style={styles.saveBtn}
         />

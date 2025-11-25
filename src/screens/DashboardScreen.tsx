@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ScreenContainer } from '../components/ScreenContainer';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../components/Button';
+import { ScreenContainer } from '../components/ScreenContainer';
 import { useAuthStore } from '../store/authStore';
 import { useWorkoutStore } from '../store/workoutStore';
 
@@ -23,10 +23,10 @@ export const DashboardScreen = () => {
             <Text style={styles.greeting}>Hello,</Text>
             <Text style={styles.username}>{user?.email?.split('@')[0]}</Text>
           </View>
-          <Button 
-            title="Sign Out" 
-            onPress={signOut} 
-            variant="outline" 
+          <Button
+            title="Sign Out"
+            onPress={signOut}
+            variant="outline"
             style={styles.signOutBtn}
             textStyle={{ fontSize: 12 }}
           />
@@ -35,14 +35,14 @@ export const DashboardScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionGrid}>
-            <Button 
-              title="Start Workout" 
-              onPress={() => navigation.navigate('Workouts')} 
+            <Button
+              title="Start Workout"
+              onPress={() => navigation.navigate('Workouts')}
               style={styles.actionBtn}
             />
-            <Button 
-              title="Log History" 
-              onPress={() => navigation.navigate('History')} 
+            <Button
+              title="Log History"
+              onPress={() => navigation.navigate('History')}
               variant="secondary"
               style={styles.actionBtn}
             />

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ScreenContainer } from '../components/ScreenContainer';
+import React, { useEffect } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../components/Button';
+import { ScreenContainer } from '../components/ScreenContainer';
 import { useHistoryStore } from '../store/historyStore';
 import { WorkoutSession } from '../types';
 
@@ -38,9 +38,9 @@ export const HistoryScreen = () => {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Button 
-          title="Back" 
-          onPress={() => navigation.goBack()} 
+        <Button
+          title="Back"
+          onPress={() => navigation.goBack()}
           variant="outline"
           style={styles.backBtn}
           textStyle={{ fontSize: 14 }}
