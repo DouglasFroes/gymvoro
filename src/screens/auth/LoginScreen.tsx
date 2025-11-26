@@ -5,12 +5,15 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { ScreenContainer } from '../../components/ScreenContainer';
+import { useAuthStore } from '../../store/authStore';
 
 export const LoginScreen = () => {
   const navigation = useNavigation<any>();
+  const { signInWithGoogle } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -29,6 +32,21 @@ export const LoginScreen = () => {
       Alert.alert('Login Failed', errorMessage);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (error: any) {
+      if (error.code === '12501') {
+        // User cancelled the sign-in flow
+        return;
+      }
+      Alert.alert('Google Sign-In Failed', error.message);
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -64,6 +82,14 @@ export const LoginScreen = () => {
         />
 
         <Button
+          title="Sign in with Google"
+          onPress={handleGoogleLogin}
+          loading={googleLoading}
+          variant="secondary"
+          style={styles.button}
+        />
+
+        <Button
           title="Create Account"
           onPress={() => navigation.navigate('Register')}
           variant="outline"
@@ -72,9 +98,7 @@ export const LoginScreen = () => {
       </View>
     </ScreenContainer>
   );
-};
-
-const styles = StyleSheet.create({
+}; const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
   },

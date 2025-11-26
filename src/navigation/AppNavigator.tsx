@@ -1,4 +1,5 @@
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
@@ -25,6 +26,12 @@ export const AppNavigator = () => {
   }
 
   useEffect(() => {
+    GoogleSignin.configure({
+      // TODO: Replace with your Web Client ID from Firebase Console -> Authentication -> Sign-in method -> Google -> Web SDK configuration
+      // It usually looks like: "123456789-xxxxxx.apps.googleusercontent.com"
+      webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', 
+    });
+
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
