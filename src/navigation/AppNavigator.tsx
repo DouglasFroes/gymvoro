@@ -29,7 +29,7 @@ export const AppNavigator = () => {
     GoogleSignin.configure({
       // TODO: Replace with your Web Client ID from Firebase Console -> Authentication -> Sign-in method -> Google -> Web SDK configuration
       // It usually looks like: "123456789-xxxxxx.apps.googleusercontent.com"
-      webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', 
+      webClientId: '848121409302-3pkr6tju88ttloq06e73gdnvu3ve1vo3.apps.googleusercontent.com'
     });
 
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
