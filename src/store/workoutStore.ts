@@ -1,67 +1,72 @@
-import firestore from '@react-native-firebase/firestore';
 import { create } from 'zustand';
-import { WorkoutRoutine } from '../types';
-import { useAuthStore } from './authStore';
+import { workoutsCollection } from '../services/firestore';
+import { Exercise } from './exerciseStore';
 
-interface WorkoutState {
-  workouts: WorkoutRoutine[];
-  loading: boolean;
-  fetchWorkouts: () => Promise<void>;
-  addWorkout: (workout: Omit<WorkoutRoutine, 'id'>) => Promise<void>;
+export interface WorkoutExercise extends Exercise {
+  sets: number;
+  reps: number;
+  rest: number; // seconds
 }
 
-export const useWorkoutStore = create<WorkoutState>((set) => ({
+export interface Workout {
+  id: string;
+  name: string;
+  exercises: WorkoutExercise[];
+  createdAt: number;
+  tags?: string[];
+}
+
+interface WorkoutState {
+  workouts: Workout[];
+  loading: boolean;
+  error: string | null;
+  fetchWorkouts: () => Promise<void>;
+  createWorkout: (workout: Omit<Workout, 'id' | 'createdAt'>) => Promise<void>;
+  deleteWorkout: (id: string) => Promise<void>;
+}
+
+export const useWorkoutStore = create<WorkoutState>((set, get) => ({
   workouts: [],
   loading: false,
+  error: null,
   fetchWorkouts: async () => {
-    const user = useAuthStore.getState().user;
-    if (!user) return;
-
-    set({ loading: true });
+    set({ loading: true, error: null });
     try {
-      const snapshot = await firestore()
-        .collection('users')
-        .doc(user.uid)
-        .collection('workouts')
-        .orderBy('createdAt', 'desc')
-        .get();
-
+      const snapshot = await workoutsCollection.orderBy('createdAt', 'desc').get();
       const workouts = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-      })) as WorkoutRoutine[];
-
-      set({ workouts });
-    } catch (error) {
+      })) as Workout[];
+      set({ workouts, loading: false });
+    } catch (error: any) {
       console.error('Error fetching workouts:', error);
-    } finally {
-      set({ loading: false });
+      set({ error: error.message, loading: false });
     }
   },
-  addWorkout: async (workoutData) => {
-    const user = useAuthStore.getState().user;
-    if (!user) return;
-
-    // Optimistic update
-    const tempId = Math.random().toString(36).substring(7);
-    const newWorkout = { id: tempId, ...workoutData } as WorkoutRoutine;
-
-    set(state => ({ workouts: [newWorkout, ...state.workouts] }));
-
+  createWorkout: async (workoutData) => {
+    set({ loading: true, error: null });
     try {
-      await firestore()
-        .collection('users')
-        .doc(user.uid)
-        .collection('workouts')
-        .add(workoutData);
-
-      // Re-fetch to get the real ID and ensure sync
-      // In a real app, we might just update the ID of the optimistic item
-      useWorkoutStore.getState().fetchWorkouts();
-    } catch (error) {
-      console.error('Error adding workout:', error);
-      // Rollback
-      set(state => ({ workouts: state.workouts.filter(w => w.id !== tempId) }));
+      const newWorkout = {
+        ...workoutData,
+        createdAt: Date.now(),
+      };
+      await workoutsCollection.add(newWorkout);
+      // Refresh workouts
+      await get().fetchWorkouts();
+    } catch (error: any) {
+      console.error('Error creating workout:', error);
+      set({ error: error.message, loading: false });
     }
   },
+  deleteWorkout: async (id) => {
+    try {
+      await workoutsCollection.doc(id).delete();
+      // Optimistic update
+      set(state => ({
+        workouts: state.workouts.filter(w => w.id !== id)
+      }));
+    } catch (error: any) {
+      console.error('Error deleting workout:', error);
+    }
+  }
 }));

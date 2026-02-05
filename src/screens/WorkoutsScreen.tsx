@@ -1,46 +1,68 @@
 import { useNavigation } from '@react-navigation/native';
+import { Calendar, Clock, Dumbbell, Play, Plus, Trash2 } from 'lucide-react-native';
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button } from '../components/Button';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { useWorkoutStore } from '../store/workoutStore';
-import { WorkoutRoutine } from '../types';
 
 export const WorkoutsScreen = () => {
   const navigation = useNavigation<any>();
-  const { workouts, fetchWorkouts, loading } = useWorkoutStore();
+  const { workouts, fetchWorkouts, deleteWorkout } = useWorkoutStore();
 
   useEffect(() => {
     fetchWorkouts();
   }, []);
 
-  const renderItem = ({ item }: { item: WorkoutRoutine }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate('WorkoutDetails', { workoutId: item.id })}
-    >
-      <View>
-        <Text style={styles.cardTitle}>{item.name}</Text>
-        <Text style={styles.cardSubtitle}>{item.exercises.length} Exercises</Text>
+  const handleStartWorkout = (workout: any) => {
+    navigation.navigate('ActiveWorkout', { workout });
+  };
+
+  const renderItem = ({ item }: { item: any }) => (
+    <View style={styles.card}>
+      <View style={styles.cardHeader}>
+        <View style={styles.iconContainer}>
+          <Dumbbell color="#4ADE80" size={24} />
+        </View>
+        <View style={styles.headerInfo}>
+          <Text style={styles.workoutName}>{item.name}</Text>
+          <Text style={styles.workoutMeta}>{item.exercises.length} Exercises</Text>
+        </View>
+        <TouchableOpacity onPress={() => deleteWorkout(item.id)} style={styles.deleteBtn}>
+          <Trash2 color="#EF4444" size={20} />
+        </TouchableOpacity>
       </View>
-      <Button
-        title="Start"
-        onPress={() => navigation.navigate('ActiveWorkout', { workoutId: item.id })}
+
+      <View style={styles.statsRow}>
+        <View style={styles.stat}>
+          <Clock size={14} color="#9CA3AF" />
+          <Text style={styles.statText}>45 min</Text>
+        </View>
+        <View style={styles.stat}>
+          <Calendar size={14} color="#9CA3AF" />
+          <Text style={styles.statText}>Last: 2 days ago</Text>
+        </View>
+      </View>
+
+      <TouchableOpacity
         style={styles.startBtn}
-        textStyle={{ fontSize: 14 }}
-      />
-    </TouchableOpacity>
+        onPress={() => handleStartWorkout(item)}
+      >
+        <Play fill="#000" color="#000" size={16} />
+        <Text style={styles.startBtnText}>Start Workout</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   return (
     <ScreenContainer>
       <View style={styles.header}>
         <Text style={styles.title}>My Workouts</Text>
-        <Button
-          title="+ New"
+        <TouchableOpacity
+          style={styles.addBtn}
           onPress={() => navigation.navigate('CreateWorkout')}
-          style={styles.newBtn}
-        />
+        >
+          <Plus color="#000" size={24} />
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -48,14 +70,19 @@ export const WorkoutsScreen = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No workouts found.</Text>
-            <Text style={styles.emptySubtext}>Create a new routine to get started!</Text>
+            <Dumbbell color="#374151" size={64} style={{ marginBottom: 16 }} />
+            <Text style={styles.emptyText}>You haven't created any workouts yet.</Text>
+            <TouchableOpacity
+              style={styles.createBtn}
+              onPress={() => navigation.navigate('CreateWorkout')}
+            >
+              <Text style={styles.createBtnText}>Create New Routine</Text>
+            </TouchableOpacity>
           </View>
         }
-        refreshing={loading}
-        onRefresh={fetchWorkouts}
       />
     </ScreenContainer>
   );
@@ -66,63 +93,111 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 16,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#FFF',
   },
-  newBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginVertical: 0,
+  addBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#4ADE80',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   list: {
-    paddingBottom: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1F2937',
+    borderRadius: 16,
     padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#374151',
+  },
+  cardHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    marginBottom: 16,
   },
-  cardTitle: {
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: 'rgba(74, 222, 128, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerInfo: {
+    flex: 1,
+  },
+  workoutName: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
+    fontWeight: 'bold',
+    color: '#FFF',
   },
-  cardSubtitle: {
+  workoutMeta: {
+    color: '#9CA3AF',
     fontSize: 14,
-    color: '#6B7280',
-    marginTop: 4,
+  },
+  deleteBtn: {
+    padding: 8,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 16,
+  },
+  stat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  statText: {
+    color: '#9CA3AF',
+    fontSize: 12,
   },
   startBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginVertical: 0,
-    minWidth: 80,
+    backgroundColor: '#4ADE80',
+    borderRadius: 12,
+    height: 44,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+  },
+  startBtnText: {
+    color: '#064E3B',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   emptyContainer: {
     alignItems: 'center',
-    marginTop: 40,
+    justifyContent: 'center',
+    marginTop: 60,
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#374151',
-  },
-  emptySubtext: {
-    fontSize: 14,
     color: '#9CA3AF',
-    marginTop: 8,
+    fontSize: 16,
+    marginBottom: 24,
   },
+  createBtn: {
+    backgroundColor: '#4ADE80',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 24,
+  },
+  createBtnText: {
+    color: '#064E3B',
+    fontWeight: 'bold',
+  }
+
 });

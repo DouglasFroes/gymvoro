@@ -1,12 +1,12 @@
 import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 
 function App(): React.JSX.Element {
   return (
-    <SafeAreaProvider>
+    <SafeAreaView style={{ flex: 1 }}>
       <AppNavigator />
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 }
 

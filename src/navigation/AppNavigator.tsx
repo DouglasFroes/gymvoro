@@ -4,13 +4,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { AboutScreen } from '../screens/AboutScreen';
+import { ActiveWorkoutScreen } from '../screens/ActiveWorkoutScreen';
 import { LoginScreen } from '../screens/auth/LoginScreen';
 import { RegisterScreen } from '../screens/auth/RegisterScreen';
 import { CreateWorkoutScreen } from '../screens/CreateWorkoutScreen';
-import { DashboardScreen } from '../screens/DashboardScreen';
-import { HistoryScreen } from '../screens/HistoryScreen';
-import { WorkoutsScreen } from '../screens/WorkoutsScreen';
+import { ExerciseDetailScreen } from '../screens/ExerciseDetailScreen';
 import { mapFirebaseUser, useAuthStore } from '../store/authStore';
+import { TabNavigator } from './TabNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,10 +50,12 @@ export const AppNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           <>
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
-            <Stack.Screen name="Workouts" component={WorkoutsScreen} />
+            <Stack.Screen name="MainTabs" component={TabNavigator} />
             <Stack.Screen name="CreateWorkout" component={CreateWorkoutScreen} />
-            <Stack.Screen name="History" component={HistoryScreen} />
+            <Stack.Screen name="ExerciseDetail" component={ExerciseDetailScreen} />
+            <Stack.Screen name="ActiveWorkout" component={ActiveWorkoutScreen} />
+            <Stack.Screen name="About" component={AboutScreen} />
+            {/* Add other modal/stack screens here that shouldn't be in the tab bar */}
           </>
         ) : (
           <>

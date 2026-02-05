@@ -1,52 +1,57 @@
-import { useNavigation } from '@react-navigation/native';
+import { Calendar, Clock, Dumbbell, Trophy } from 'lucide-react-native';
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { Button } from '../components/Button';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { useHistoryStore } from '../store/historyStore';
-import { WorkoutSession } from '../types';
+
+const formatDate = (timestamp: number) => {
+  return new Date(timestamp).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+};
+
+const formatDuration = (seconds: number) => {
+  const mins = Math.floor(seconds / 60);
+  return `${mins} min`;
+};
 
 export const HistoryScreen = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const { history, fetchHistory, loading } = useHistoryStore();
 
   useEffect(() => {
     fetchHistory();
   }, []);
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString(undefined, {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  const renderItem = ({ item }: { item: WorkoutSession }) => (
+  const renderItem = ({ item }: { item: any }) => (
     <View style={styles.card}>
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{item.routineName}</Text>
-        <Text style={styles.cardDate}>{formatDate(item.startTime)}</Text>
+      <View style={styles.dateBadge}>
+        <Text style={styles.dateDay}>{new Date(item.startTime).getDate()}</Text>
+        <Text style={styles.dateMonth}>{new Date(item.startTime).toLocaleDateString('en-US', { month: 'short' })}</Text>
       </View>
-      <Text style={styles.cardSubtitle}>
-        {item.exercises.length} Exercises • {item.endTime ? Math.round((item.endTime - item.startTime) / 60000) + ' min' : 'Incomplete'}
-      </Text>
+
+      <View style={styles.content}>
+        <Text style={styles.workoutName}>{item.workoutName}</Text>
+        <View style={styles.statsRow}>
+          <View style={styles.stat}>
+            <Clock size={12} color="#9CA3AF" />
+            <Text style={styles.statText}>{formatDuration(item.duration)}</Text>
+          </View>
+          <View style={styles.stat}>
+            <Dumbbell size={12} color="#9CA3AF" />
+            <Text style={styles.statText}>{item.exercises?.length || 0} Exercises</Text>
+          </View>
+          <View style={styles.stat}>
+            <Trophy size={12} color="#FBBF24" />
+            <Text style={[styles.statText, { color: '#FBBF24' }]}>PR!</Text>
+          </View>
+        </View>
+      </View>
     </View>
   );
 
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Button
-          title="Back"
-          onPress={() => navigation.goBack()}
-          variant="outline"
-          style={styles.backBtn}
-          textStyle={{ fontSize: 14 }}
-        />
         <Text style={styles.title}>History</Text>
-        <View style={{ width: 60 }} />
       </View>
 
       <FlatList
@@ -54,14 +59,13 @@ export const HistoryScreen = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No history yet.</Text>
-            <Text style={styles.emptySubtext}>Complete a workout to see it here.</Text>
+            <Calendar color="#374151" size={64} style={{ marginBottom: 16 }} />
+            <Text style={styles.emptyText}>No workout history yet.</Text>
           </View>
         }
-        refreshing={loading}
-        onRefresh={fetchHistory}
       />
     </ScreenContainer>
   );
@@ -69,67 +73,79 @@ export const HistoryScreen = () => {
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 16,
-  },
-  backBtn: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    marginVertical: 0,
-    minWidth: 60,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#FFF',
   },
   list: {
-    paddingBottom: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 80,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1F2937',
+    borderRadius: 16,
     padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  cardHeader: {
+    marginBottom: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 16,
+    borderWidth: 1,
+    borderColor: '#374151',
+  },
+  dateBadge: {
+    backgroundColor: '#374151',
+    borderRadius: 12,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+  },
+  dateDay: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  dateMonth: {
+    color: '#9CA3AF',
+    fontSize: 10,
+    textTransform: 'uppercase',
+  },
+  content: {
+    flex: 1,
+  },
+  workoutName: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '600',
     marginBottom: 4,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
+  statsRow: {
+    flexDirection: 'row',
+    gap: 12,
   },
-  cardDate: {
-    fontSize: 14,
-    color: '#6B7280',
+  stat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
-  cardSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
+  statText: {
+    color: '#9CA3AF',
+    fontSize: 12,
   },
   emptyContainer: {
     alignItems: 'center',
-    marginTop: 40,
+    justifyContent: 'center',
+    marginTop: 60,
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#374151',
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#9CA3AF',
-    marginTop: 8,
-  },
+    color: '#6B7280',
+    fontSize: 16,
+    fontStyle: 'italic',
+  }
 });

@@ -17,7 +17,7 @@ export const LoginScreen = () => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
       return;
     }
 
@@ -25,11 +25,11 @@ export const LoginScreen = () => {
     try {
       await auth().signInWithEmailAndPassword(email, password);
     } catch (error: any) {
-      let errorMessage = 'Something went wrong';
-      if (error.code === 'auth/invalid-email') errorMessage = 'Invalid email address';
-      if (error.code === 'auth/user-not-found') errorMessage = 'User not found';
-      if (error.code === 'auth/wrong-password') errorMessage = 'Wrong password';
-      Alert.alert('Login Failed', errorMessage);
+      let errorMessage = 'Algo deu errado';
+      if (error.code === 'auth/invalid-email') errorMessage = 'Endereço de e-mail inválido';
+      if (error.code === 'auth/user-not-found') errorMessage = 'Usuário não encontrado';
+      if (error.code === 'auth/wrong-password') errorMessage = 'Senha incorreta';
+      Alert.alert('Falha no login', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -44,7 +44,7 @@ export const LoginScreen = () => {
         // User cancelled the sign-in flow
         return;
       }
-      Alert.alert('Google Sign-In Failed', error.message);
+      Alert.alert('Falha no login com Google', error.message);
     } finally {
       setGoogleLoading(false);
     }
@@ -53,13 +53,13 @@ export const LoginScreen = () => {
   return (
     <ScreenContainer style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to continue your fitness journey</Text>
+        <Text style={styles.title}>Bem-vindo de volta</Text>
+        <Text style={styles.subtitle}>Faça login para continuar sua jornada fitness</Text>
       </View>
 
       <View style={styles.form}>
         <Input
-          label="Email"
+          label="E-mail"
           placeholder="john@example.com"
           value={email}
           onChangeText={setEmail}
@@ -67,7 +67,7 @@ export const LoginScreen = () => {
           keyboardType="email-address"
         />
         <Input
-          label="Password"
+          label="Senha"
           placeholder="******"
           value={password}
           onChangeText={setPassword}
@@ -75,14 +75,14 @@ export const LoginScreen = () => {
         />
 
         <Button
-          title="Sign In"
+          title="Entrar"
           onPress={handleLogin}
           loading={loading}
           style={styles.button}
         />
 
         <Button
-          title="Sign in with Google"
+          title="Entrar com Google"
           onPress={handleGoogleLogin}
           loading={googleLoading}
           variant="secondary"
@@ -90,7 +90,7 @@ export const LoginScreen = () => {
         />
 
         <Button
-          title="Create Account"
+          title="Criar Conta"
           onPress={() => navigation.navigate('Register')}
           variant="outline"
           style={styles.button}
